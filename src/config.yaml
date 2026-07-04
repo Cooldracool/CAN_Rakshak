@@ -1,0 +1,66 @@
+# =============================================================================
+# CROSS-STAGE PARAMETER DEPENDENCIES
+# =============================================================================
+#
+# [dataset_processing]
+#   model_name        (from testing_and_evaluation)
+#                     - Stat extractor: names the saved scaler file
+#   mode              (from testing_and_evaluation)
+#                     - Stat extractor: decides whether to fit or load the scaler
+#
+# [testing_and_evaluation]
+#   dataset_name      (top-level)
+#   file_name         (top-level)
+#
+# [adversarial_perturbation]
+#   dataset_name      (top-level)
+#   file_name         (top-level)
+#   model             (from testing_and_evaluation)
+#                     - loads model for attack generation
+#   model_name        (from testing_and_evaluation)
+#                     - constructs model file path
+#   test_dataset_dir  (from testing_and_evaluation)
+#                     - locates the test .npz file for attack generation
+#
+# [robust_training]
+#   dataset_name      (top-level)
+#   file_name         (top-level)
+#   feature_extractor (from dataset_processing)
+#                     - selects the retrainer class
+#   model             (from testing_and_evaluation)
+#                     - constructs model path for retraining
+#   model_name        (from testing_and_evaluation)
+#                     - constructs model file path
+#   train_dataset_dir (from testing_and_evaluation)
+#                     - loads training data for merging with adversarial samples
+#
+# =============================================================================
+
+run_steps:
+  dataset_processing: false
+  testing_and_evaluation: true
+  adversarial_perturbation: false
+  robust_training: false
+dataset_name: Demo_dataset
+file_name: Combined_dataset0.csv
+dataset_processing:
+  preprocess: true
+  split: true
+  split_mode: default
+  split_ratio: 0.2
+  feature_extraction: true
+  feature_extractor: Stat
+testing_and_evaluation:
+  model: MLP
+  model_name: CH_DoS_stat
+  mode: test
+  epochs: 10
+  train_dataset_dir: CH_DoS_train_stat
+  test_dataset_dir: CH_DoS_test_stat
+adversarial_perturbation:
+  adv_attack: GeneticAdvAttack
+  attack_type: DoS
+robust_training:
+  defense_method: FrameBuilderRetrainer
+  adv_samples: 350
+  adv_examples_path: Null
