@@ -1,5 +1,5 @@
 from evaluate import evaluation_metrics
-from ..FGSM.fgsm import FGSM_attack
+from ..FGSM.MLP_fgsm import FGSM_attack
 from .base import *
 from contextlib import redirect_stdout, redirect_stderr
 import os
@@ -31,9 +31,14 @@ class FGSM(Attack):
         timestamp = datetime.now().strftime("_%Y_%m_%d_%H%M%S")
         log_file  = os.path.join(log_file_dir, f"{attack_name}_attack{timestamp}.log")
 
-        with open(log_file, "w") as f:
-            with redirect_stdout(f), redirect_stderr(f):
-                print("Making call to the attack : ", attack_name)
-                preds, labels, output_path = FGSM_attack(surrogate_model_path, target_model_path, cfg)
-                evaluation_metrics(preds, labels, cfg)
-                return output_path
+        print("Making call to the attack :", attack_name)
+
+        preds, labels, output_path = FGSM_attack(
+            surrogate_model_path,
+            target_model_path,
+            cfg
+        )
+
+        evaluation_metrics(preds, labels, cfg)
+
+        return output_path

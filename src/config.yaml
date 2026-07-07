@@ -1,45 +1,7 @@
-# =============================================================================
-# CROSS-STAGE PARAMETER DEPENDENCIES
-# =============================================================================
-#
-# [dataset_processing]
-#   model_name        (from testing_and_evaluation)
-#                     - Stat extractor: names the saved scaler file
-#   mode              (from testing_and_evaluation)
-#                     - Stat extractor: decides whether to fit or load the scaler
-#
-# [testing_and_evaluation]
-#   dataset_name      (top-level)
-#   file_name         (top-level)
-#
-# [adversarial_perturbation]
-#   dataset_name      (top-level)
-#   file_name         (top-level)
-#   model             (from testing_and_evaluation)
-#                     - loads model for attack generation
-#   model_name        (from testing_and_evaluation)
-#                     - constructs model file path
-#   test_dataset_dir  (from testing_and_evaluation)
-#                     - locates the test .npz file for attack generation
-#
-# [robust_training]
-#   dataset_name      (top-level)
-#   file_name         (top-level)
-#   feature_extractor (from dataset_processing)
-#                     - selects the retrainer class
-#   model             (from testing_and_evaluation)
-#                     - constructs model path for retraining
-#   model_name        (from testing_and_evaluation)
-#                     - constructs model file path
-#   train_dataset_dir (from testing_and_evaluation)
-#                     - loads training data for merging with adversarial samples
-#
-# =============================================================================
-
 run_steps:
   dataset_processing: false
-  testing_and_evaluation: true
-  adversarial_perturbation: false
+  testing_and_evaluation: false
+  adversarial_perturbation: true
   robust_training: false
 dataset_name: Demo_dataset
 file_name: Combined_dataset0.csv
@@ -58,9 +20,13 @@ testing_and_evaluation:
   train_dataset_dir: CH_DoS_train_stat
   test_dataset_dir: CH_DoS_test_stat
 adversarial_perturbation:
-  adv_attack: GeneticAdvAttack
+  adv_attack: FGSM
   attack_type: DoS
+  adv_attack_type: whitebox
+  surrogate_model: MLP_CH_DoS_stat.h5
+  target_model: null
+  epsilon: 0.4
 robust_training:
   defense_method: FrameBuilderRetrainer
   adv_samples: 350
-  adv_examples_path: Null
+  adv_examples_path: null

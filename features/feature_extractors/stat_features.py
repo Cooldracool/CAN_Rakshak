@@ -89,15 +89,18 @@ class Stat(FeatureExtractor):
         
         data = data.replace(np.nan, '00')
         
-        data_cols = ['data0', 'data1', 'data2', 'data3', 'data4', 'data5', 'data6', 'data7']
+        data_cols = [
+            'data0','data1','data2','data3',
+            'data4','data5','data6','data7'
+        ]
 
-        data[data_cols] = data[data_cols].astype(str)
-        data['data'] = data[data_cols].apply(''.join, axis=1)
-        data.drop(columns = data_cols, inplace = True, axis = 1)
-        
         data['can_id'] = data['can_id'].apply(hex_to_dec)
-        data['data'] = data['data'].apply(hex_to_dec)
 
-        data = data.assign(IAT=data['timestamp'].diff().fillna(0))
+        for col in data_cols:
+            data[col] = data[col].apply(hex_to_dec)
+
+        # don't compute DATA
+        # don't compute IAT
+        # don't drop data0...data7
 
         return data
