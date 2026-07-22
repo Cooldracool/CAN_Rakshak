@@ -94,7 +94,7 @@ def FGSM_attack(surr_model_path, test_model_path, cfg):
     
     gradient = np.vstack(all_gradients)
 
-    epsilon = cfg.get("epsilon", 0.4)
+    epsilon = cfg.get("epsilon", 10)
     print("Epsilon =", epsilon)
     perturbation = epsilon * np.sign(gradient)
     mask = np.array(
@@ -105,6 +105,54 @@ def FGSM_attack(surr_model_path, test_model_path, cfg):
     perturbation *= mask
 
     X_adv = X_test + perturbation
+    X_adv[:, 0] = X_test[:, 0]      # CAN ID
+    X_adv[:, 1] = X_test[:, 1]      # DLC
+
+    X_adv[:, 2:] = np.clip(X_adv[:, 2:], 0, 255)
+
+    ############################################################
+    # Save first 1000 clean and adversarial samples
+    ############################################################
+
+    output_dir = os.path.join(
+        cfg["dir_path"],
+        "..",
+        "datasets",
+        cfg["dataset_name"],
+        "FGSM_Output"
+    )
+
+    os.makedirs(output_dir, exist_ok=True)
+
+    num_samples = 1000
+
+    original_file = os.path.join(
+        output_dir,
+        "Original_1000.csv"
+    )
+
+    adv_file = os.path.join(
+        output_dir,
+        "FGSM_1000.csv"
+    )
+
+    np.savetxt(
+        original_file,
+        X_test[:num_samples],
+        delimiter=",",
+        fmt="%.6f"
+    )
+
+    np.savetxt(
+        adv_file,
+        X_adv[:num_samples],
+        delimiter=",",
+        fmt="%.6f"
+    )
+
+    print(f"Saved {num_samples} original samples")
+    print(f"Saved {num_samples} adversarial samples")
+
     changed = np.count_nonzero(X_adv != X_test)
     print("Changed feature values:", changed)
 
@@ -118,3 +166,5 @@ def FGSM_attack(surr_model_path, test_model_path, cfg):
 
     preds = model.predict(X_adv)
     return preds, Y_test, None
+
+    

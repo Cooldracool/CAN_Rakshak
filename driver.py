@@ -60,6 +60,7 @@ def build_config(yaml_cfg):
 
         # adversarial_perturbation
         # (formerly split between config.py and attack_config.py)
+        'attack_case':         ap.get('attack_case', 'mal_to_benign'),
         'adv_attack':          ap.get('adv_attack',           None),
         'attack_mode':         ap.get('attack_type',          'DoS'),   # was attack_config.ATTACK_MODE
         'adv_attack_type':     ap.get('adv_attack_type',      'blackbox'),  # was attack_config.ADV_ATTACK_TYPE
@@ -67,8 +68,11 @@ def build_config(yaml_cfg):
         'target_model':        ap.get('target_model',         ''),      # was attack_config.TARGET_MODEL
         'epsilon':             ap.get('epsilon',              1),       # was attack_config.EPSILON
         'can_id':              ap.get('id',                   '00000000000'),  # was attack_config.ID
+        'eps_step':            ap.get('eps_step', 0.2),
+        'max_iter':            ap.get('max_iter', 40),
         'dlc':                 ap.get('dlc',                  '1000'),  # was attack_config.DLC
         'max_injection_limit': ap.get('max_injection_limit',  15),      # was attack_config.MAX_INJECTION_LIMIT
+        'offset':              ap.get('offset', 0.01),
 
         # robust_training
         'adv_retraining':    rt.get('adv_retraining',    False),
@@ -173,6 +177,7 @@ def main():
 if __name__ == "__main__":
     main()
 
+    
 
 
 

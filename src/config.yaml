@@ -14,18 +14,22 @@ dataset_processing:
   feature_extractor: Stat
 testing_and_evaluation:
   model: MLP
-  model_name: CH_DoS_stat
+  model_name: MLP_CH_DoS_stat
   mode: test
   epochs: 10
   train_dataset_dir: CH_DoS_train_stat
   test_dataset_dir: CH_DoS_test_stat
 adversarial_perturbation:
-  adv_attack: FGSM
+  attack_case: mal_to_benign
+  adv_attack: PGD
   attack_type: DoS
   adv_attack_type: whitebox
   surrogate_model: MLP_CH_DoS_stat.h5
   target_model: null
-  epsilon: 0.4
+  epsilon: 1
+  offset: null
+  eps_step: 0.2
+  max_iter: 40
 robust_training:
   defense_method: FrameBuilderRetrainer
   adv_samples: 350

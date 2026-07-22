@@ -3,6 +3,9 @@ from common_imports import (
     confusion_matrix, ConfusionMatrixDisplay,
     accuracy_score, precision_score, recall_score, f1_score,
 )
+import evaluate
+print(evaluate.__file__)
+from evaluate import evaluation_metrics
 
 
 def evaluation_metrics(all_preds, all_labels, cfg):
@@ -62,15 +65,20 @@ def evaluation_metrics(all_preds, all_labels, cfg):
     print(f'Recall: {IDS_recall:.4f}')
     print(f'F1 Score: {IDS_F1:.4f}')
 
-    if adv_attack and len(np.unique(all_labels)) == 2:  ###for binary only now
-        tnr = true_negatives / (true_negatives + false_positives) if (true_negatives + false_positives) > 0 else 0.0
-        mdr = true_positives / (true_positives + false_negatives) if (true_positives + false_negatives) > 0 else 0.0
+    if adv_attack :
 
-        misclassified_attack_packets = ((all_labels == 1) & (all_preds == 0)).sum().item()
-        total_attack_packets = (all_labels == 1).sum().item()
+        successful_attacks = np.count_nonzero(
+            all_preds[attack_mask] == 0
+        )
 
-        oa_asr = misclassified_attack_packets / total_attack_packets
+        total_attack_packets = np.count_nonzero(
+            attack_mask
+        )
+
+        asr = successful_attacks / total_attack_packets
+
         print("----------------Adversarial Attack Performance Metric----------------")
-        print("TNR:", tnr)
-        print("Malicious Detection Rate:", mdr)
-        print("Attack Success Rate:", oa_asr)
+        print("Total attacked packets :", total_attack_packets)
+        print("Successful evasions    :", successful_attacks)
+        print(f"Attack Success Rate    : {asr:.4%}")
+

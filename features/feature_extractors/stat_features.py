@@ -32,7 +32,7 @@ class Stat(FeatureExtractor):
         X, Y = df.drop(columns=['flag', 'timestamp']).values, df['flag'].values
         scalar_path = os.path.join(modified_dataset_path, model_name + "scalar.pkl")
 
-        if mode == "train":
+        """if mode == "train":
             scaler = StandardScaler()
             scaler.fit(X)
             joblib.dump(scaler, scalar_path)
@@ -41,6 +41,10 @@ class Stat(FeatureExtractor):
             modified_dataset_path = os.path.join(dataset_path, "train")
             scalar_path = os.path.join(modified_dataset_path, model_name + "scalar.pkl")
             scaler = joblib.load(scalar_path)
+            
+            # Scale features
+            
+        X = scaler.transform(X)"""
 
         # Create output folder names
         features_dir = os.path.join(self.features_path, "Stat")
@@ -48,8 +52,7 @@ class Stat(FeatureExtractor):
 
         prefix = file_name.replace(".csv", "").replace(".log", "")
 
-        # Scale features
-        X = scaler.transform(X)
+        
 
         # Convert labels
         label_map = {

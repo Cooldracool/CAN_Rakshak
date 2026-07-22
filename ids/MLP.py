@@ -10,15 +10,17 @@ os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 logging.getLogger("absl").setLevel(logging.ERROR)
 absl.logging.set_verbosity(absl.logging.ERROR)
 class MLP(IDS):
-    
+
     def get_network(self):
         return self.mlp
     
     def __init__(self):
         self.mlp = Sequential()
         self.mlp.add(Input(shape = (10,)))
-        self.mlp.add(Dense(128, activation = 'relu'))
-        self.mlp.add(Dense(128, activation = 'relu'))
+        self.mlp.add(Dense(16, activation = 'relu'))
+        self.mlp.add(Dense(16, activation = 'relu'))
+        self.mlp.add(Dense(16, activation = 'relu'))
+        self.mlp.add(Dense(16, activation = 'relu'))
         self.mlp.add(Dense(4, activation='softmax'))
 
     def train(self, train_dataset_dir=None, cfg=None, **kwargs):
