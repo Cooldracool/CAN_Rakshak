@@ -27,7 +27,7 @@ def test_model(modelName, modelPath, cfg, adv_attack=None, image=None, TestSplit
 
         if len(result) == 2:
             preds, labels = result
-            evaluation_metrics(preds, labels, None, cfg)
+            evaluation_metrics(preds, labels, cfg)
 
         elif len(result) == 3:
             preds, labels, attack_mask = result

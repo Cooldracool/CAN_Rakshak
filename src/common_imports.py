@@ -82,6 +82,7 @@ try:
     from tensorflow.keras.optimizers import Adam
     from tensorflow.keras.losses import SparseCategoricalCrossentropy
     from tensorflow.keras.callbacks import EarlyStopping, Callback
+    from tensorflow.keras.models import Model, Sequential, load_model
     TF_AVAILABLE = True
 except ImportError:
     TF_AVAILABLE = False

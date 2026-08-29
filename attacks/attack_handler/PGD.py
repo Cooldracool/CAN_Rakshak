@@ -46,12 +46,10 @@ class PGD(Attack):
 
         print("Making call to the attack :", attack_name)
 
-        preds, labels, output_path = PGD_attack(
+        preds, labels, attack_mask = PGD_attack(
             surrogate_model_path,
             target_model_path,
             cfg
         )
 
-        evaluation_metrics(preds, labels, cfg)
-
-        return output_path
+        evaluation_metrics(preds, labels, cfg, attack_mask)  # ← Pass attack_mask

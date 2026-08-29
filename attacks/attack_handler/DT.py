@@ -32,12 +32,12 @@ class DT(Attack):
 
         print("Making call to the attack :", attack_name)
 
-        preds, labels, output_path = DT_attack(
+        preds, labels, attack_mask = DT_attack(
             surrogate_model_path,
             target_model_path,
             cfg
         )
 
-        evaluation_metrics(preds, labels, cfg)
+        evaluation_metrics(preds, labels, cfg, attack_mask)
 
-        return output_path
+        return None

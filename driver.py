@@ -86,14 +86,6 @@ def run_pipeline(yaml_cfg):
     """Build config and run enabled pipeline stages."""
     cfg = build_config(yaml_cfg)
 
-    from preprocessing import preprocess
-    from get_extractor import get_extractor
-    from get_splitter import get_splitter
-    from train import train_model
-    from test import test_model
-    from get_attack import get_attack
-    from retraining import adversarial_retraining
-
     run_steps = yaml_cfg.get('run_steps', {})
     dataset_path = os.path.join(PROJECT_ROOT, "datasets", cfg['dataset_name'])
 
@@ -112,6 +104,9 @@ def run_pipeline(yaml_cfg):
     if run_steps.get('dataset_processing', False):
         print("[Stage 1/4] Dataset Processing")
         print("-" * 40)
+        from preprocessing import preprocess
+        from get_extractor import get_extractor
+        from get_splitter import get_splitter
         preprocess(dataset_path)
         extractor = get_extractor(cfg['feature_extractor'], cfg)
         if cfg['split']:
@@ -124,6 +119,8 @@ def run_pipeline(yaml_cfg):
         mode = cfg['mode'].lower()
         print(f"[Stage 2/4] {'Training' if mode == 'train' else 'Testing'} & Evaluation")
         print("-" * 40)
+        from train import train_model
+        from test import test_model
         model_name = cfg['model'] + "_" + cfg['model_name'] + ".h5"
         model_path = os.path.join(PROJECT_ROOT, "models", model_name)
         os.makedirs(os.path.dirname(model_path), exist_ok=True)
@@ -142,11 +139,8 @@ def run_pipeline(yaml_cfg):
     if run_steps.get('adversarial_perturbation', False):
         print("[Stage 3/4] Adversarial Perturbation")
         print("-" * 40)
+        from get_attack import get_attack
         adv_examples_path = get_attack(cfg['adv_attack'], cfg)
-        yaml_cfg['robust_training']['adv_examples_path'] = adv_examples_path
-        yaml_path = os.path.join(SRC_DIR, "config.yaml")
-        with open(yaml_path, "w") as f:
-            yaml.dump(yaml_cfg, f, sort_keys=False)
         print("[Stage 3/4] Done")
         print()
 
@@ -154,6 +148,7 @@ def run_pipeline(yaml_cfg):
     if run_steps.get('robust_training', False):
         print("[Stage 4/4] Robust Training")
         print("-" * 40)
+        from retraining import adversarial_retraining
         if adv_examples_path is None:
             adv_examples_path = yaml_cfg.get("robust_training", {}).get("adv_examples_path")
 
