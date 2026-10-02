@@ -225,4 +225,3 @@ This framework uses the following public datasets: Car Hacking Dataset (HCRL), C
 ## License
 
 Released under the [MIT License](LICENSE).
- The Acknowledgements section needs a check from Tarun. If any code was taken or adapted from another project (for example the published CANShield work, or a lab's codebase), add a line here such as Parts of the preprocessing are adapted from <project> (<link>). Leaving that out is the kind of thing that gets applications rejected.
