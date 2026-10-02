@@ -1,6 +1,8 @@
-# CAN Shield
+# CAN Rakshak
 
-This is a framework for evaluating and benchmarking CAN Intrusion Detection Systems. CAN Shield implements a complete adversarial research pipeline: dataset preprocessing → feature extraction → model training/testing → adversarial attack generation → adversarial retraining.
+An open-source framework for benchmarking the adversarial robustness of CAN bus intrusion detection systems.
+
+This is a framework for evaluating and benchmarking CAN Intrusion Detection Systems. CAN Rakshak implements a complete adversarial research pipeline: dataset preprocessing → feature extraction → model training/testing → adversarial attack generation → adversarial retraining.
 
 ---
 
@@ -20,7 +22,7 @@ Step 4: Robust Training        — retrain model on clean + adversarial samples
 ## Project Structure
 
 ```
-CANShield/
+CAN_Rakshak/
 ├── driver.py                   # Main entry point
 ├── requirements.txt
 ├── src/
@@ -84,7 +86,7 @@ testing_and_evaluation:
   test_dataset_dir: CH_DoS_test_frames
 
 adversarial_perturbation:
-  adv_attack: GeneticAdvAttack    # GeneticAdvAttack | FGSM
+  adv_attack: GeneticAdvAttack    # GeneticAdvAttack | FGSM | PGD | DT
   attack_type: DoS                # DoS | Fuzzy | Spoof
 
 robust_training:
@@ -125,6 +127,8 @@ robust_training:
 |---|---|---|
 | `GeneticAdvAttack` | Genetic | Genetic algorithm attack for DoS, Fuzzy, and Spoof traffic |
 | `FGSM` | Evasion | Fast Gradient Sign Method with constrained perturbations |
+| `PGD` | Evasion | Projected Gradient Descent attack on the MLP IDS |
+| `DT` | Model-specific | Adversarial attack on Decision Tree / Random Forest IDS |
 
 ### Datasets
 
@@ -209,3 +213,16 @@ All core components use abstract base classes. To add a new component:
 | Dataset Preprocessor | `DataPreprocessor` | `src/base_preprocessor.py` |
 | Attack | `Attack` / `EvasionAttack` / `GeneticAttack` | `attacks/attack_handler/base.py` |
 | Defense / Retrainer | `BaseDefense` | `defense/base.py` |
+
+## Contributing
+
+Contributions are welcome! To add a new IDS model, attack, feature extractor or defense, inherit from the matching base class (see *Extending the Framework* above) and open a pull request. See [CONTRIBUTING.md](CONTRIBUTING.md).
+
+## Acknowledgements
+
+This framework uses the following public datasets: Car Hacking Dataset (HCRL), CAN Intrusion Dataset, CARLA simulation data and MIRGU. Please cite the original dataset authors when using them.
+
+## License
+
+Released under the [MIT License](LICENSE).
+ The Acknowledgements section needs a check from Tarun. If any code was taken or adapted from another project (for example the published CANShield work, or a lab's codebase), add a line here such as Parts of the preprocessing are adapted from <project> (<link>). Leaving that out is the kind of thing that gets applications rejected.
